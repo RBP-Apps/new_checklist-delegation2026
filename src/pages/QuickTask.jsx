@@ -179,7 +179,7 @@ export default function QuickTask() {
     try {
       setSubmitting(true);
 
-      const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbymxGr0eX3FInN98WP1YiRm5Pdnf-wh2TZ9lUsfoaCMAo77Q5EFdQ2OjeC3YUvXLFl2/exec";
+      const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbzhGx7Y_6l8a63nkcXEiG4esKA42RRx4JyCKk-OJ6qvAnsVfIMOJMoc-9SewsmUsTHBTg/exec";
       const userSheetId = CONFIG.SHEET_ID;
 
       if (!userAppScriptUrl || !userSheetId) {
@@ -267,7 +267,7 @@ export default function QuickTask() {
 
 
   const CONFIG = {
-    SHEET_ID: "1V-KUuP_y1FyYahbyzErir160DXpN9erDm1wJw52vhcY",
+    SHEET_ID: "1zLGfIyllg8uCpcWCgbixsM1gbZrRDlXuVd8rKzLLi0Y",
     WHATSAPP_SHEET: "master", // For login credentials and user roles
     CHECKLIST_SHEET: "Unique", // For unique checklist tasks
     DELEGATION_SHEET: "Delegation", // For delegation tasks
@@ -293,7 +293,7 @@ export default function QuickTask() {
         throw new Error("No user logged in. Please log in to access tasks.");
       }
 
-      const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbymxGr0eX3FInN98WP1YiRm5Pdnf-wh2TZ9lUsfoaCMAo77Q5EFdQ2OjeC3YUvXLFl2/exec";
+      const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbzhGx7Y_6l8a63nkcXEiG4esKA42RRx4JyCKk-OJ6qvAnsVfIMOJMoc-9SewsmUsTHBTg/exec";
 
       // Fetch user role from Whatsapp sheet via Apps Script proxy
       const whatsappSheetUrl = `${userAppScriptUrl}?sheet=${CONFIG.WHATSAPP_SHEET}&action=fetch&t=${Date.now()}`;
@@ -354,7 +354,7 @@ export default function QuickTask() {
     try {
       setLoading(true);
 
-      const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbymxGr0eX3FInN98WP1YiRm5Pdnf-wh2TZ9lUsfoaCMAo77Q5EFdQ2OjeC3YUvXLFl2/exec";
+      const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbzhGx7Y_6l8a63nkcXEiG4esKA42RRx4JyCKk-OJ6qvAnsVfIMOJMoc-9SewsmUsTHBTg/exec";
 
       // Fetch from Checklist sheet (Unique sheet) via Apps Script proxy
       const checklistUrl = `${userAppScriptUrl}?sheet=${CONFIG.CHECKLIST_SHEET}&action=fetch&t=${Date.now()}`;
@@ -432,7 +432,7 @@ export default function QuickTask() {
     try {
       setDelegationLoading(true);
 
-      const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbymxGr0eX3FInN98WP1YiRm5Pdnf-wh2TZ9lUsfoaCMAo77Q5EFdQ2OjeC3YUvXLFl2/exec";
+      const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbzhGx7Y_6l8a63nkcXEiG4esKA42RRx4JyCKk-OJ6qvAnsVfIMOJMoc-9SewsmUsTHBTg/exec";
 
       // Fetch from Delegation sheet via Apps Script proxy
       const delegationUrl = `${userAppScriptUrl}?sheet=${CONFIG.DELEGATION_SHEET}&action=fetch&t=${Date.now()}`;
