@@ -93,27 +93,32 @@ export default function AdminDashboard() {
     if (type === 'total') {
       filteredTasks = [...allTasks];
     } else if (type === 'completed') {
-      filteredTasks = allTasks.filter(task =>
-        task.status === 'completed'
-      );
+      if (dashboardType === 'delegation') {
+        filteredTasks = allTasks.filter(task => task.rating === 1);
+      } else {
+        filteredTasks = allTasks.filter(task =>
+          task.status === 'completed' || task.isArchive
+        );
+      }
     } else if (type === 'pending') {
       if (dashboardType === 'delegation') {
-        filteredTasks = allTasks.filter(task => {
-          if (task.status === 'completed') return false;
-          return true;
-        });
+        filteredTasks = allTasks.filter(task => task.rating === 2);
       } else {
         filteredTasks = allTasks.filter(task =>
           task.status !== 'completed'
         );
       }
     } else if (type === 'overdue') {
-      filteredTasks = allTasks.filter(task => {
-        if (task.status === 'completed') return false;
-        const taskDate = parseDateFromDDMMYYYY(task.taskStartDate);
-        if (!taskDate) return false;
-        return taskDate < today;
-      });
+      if (dashboardType === 'delegation') {
+        filteredTasks = allTasks.filter(task => task.rating >= 3);
+      } else {
+        filteredTasks = allTasks.filter(task => {
+          if (task.status === 'completed') return false;
+          const taskDate = parseDateFromDDMMYYYY(task.taskStartDate);
+          if (!taskDate) return false;
+          return taskDate < today;
+        });
+      }
     } else if (type === 'notDone') {
       filteredTasks = allTasks.filter(task => {
         const statusColumnValue = task.notDoneStatus;
@@ -629,6 +634,18 @@ export default function AdminDashboard() {
           }
         }
 
+        // Get Not Done status from Column L (index 11) for checklist
+        // or just check for "Not Done" string in common columns
+        const colKValue = getCellValue(row, 10);
+        const colLValue = getCellValue(row, 11);
+        const notDoneStatus = (
+          (colKValue && String(colKValue).toLowerCase().includes('not done')) ||
+          (colLValue && String(colLValue).toLowerCase().includes('not done'))
+        ) ? 'Not Done' : '';
+
+        // Get rating for delegation
+        const rating = (dashboardType === "delegation") ? (getCellValue(row, 17) || 0) : 0;
+
         // Create the task object
         const taskObj = {
           id: taskIdStr,
@@ -640,7 +657,9 @@ export default function AdminDashboard() {
           status,
           frequency,
           isArchive,
-          shouldCount: shouldCountInStats
+          shouldCount: shouldCountInStats,
+          notDoneStatus,
+          rating
         };
 
         // Update stats
@@ -650,53 +669,50 @@ export default function AdminDashboard() {
           totalTasks++;
           staffData.totalTasks++;
 
-          // SPECIAL LOGIC: Archive tasks only count towards TOTAL, not COMPLETED/PENDING/OVERDUE
-          // As requested by user: "only remove this logic for three cards completed ,pending and overdue 
-          // and remain same logic fetch data two sheet in one cards Total task card"
-          if (isArchive) {
-            // Already added to totalTasks above.
-            // Do NOT add to completed/pending/overdue
-          } else {
-            // Regular logic for non-archive tasks
-            if (status === 'completed') {
-              completedTasks++;
-              staffData.completedTasks++;
-              statusData.Completed++;
+          if (isArchive || status === 'completed') {
+            completedTasks++;
+            staffData.completedTasks++;
+            statusData.Completed++;
 
-              // Count by rating (delegation only)
-              if (dashboardType === "delegation") {
-                const ratingValue = getCellValue(row, 17);
-                if (ratingValue === 1) completedRatingOne++;
-                else if (ratingValue === 2) completedRatingTwo++;
-                else if (ratingValue > 2) completedRatingThreePlus++;
-              }
+            if (dashboardType === "delegation") {
+              const ratingValue = getCellValue(row, 17);
+              if (ratingValue === 1) completedRatingOne++;
+              else if (ratingValue === 2) completedRatingTwo++;
+              else if (ratingValue > 2) completedRatingThreePlus++;
+            }
 
-              // Update monthly data
-              const completedMonth = parseDateFromDDMMYYYY(completionDate);
-              if (completedMonth) {
-                const monthName = completedMonth.toLocaleString('default', { month: 'short' });
-                if (monthlyData[monthName]) {
-                  monthlyData[monthName].completed++;
-                }
-              }
-            } else {
-              staffData.pendingTasks++;
-              pendingTasks++;
-              statusData.Pending++;
-
-              if (status === 'overdue') {
-                overdueTasks++;
-                statusData.Overdue++;
-              }
-
-              // Monthly pending data
-              const monthName = (dashboardType === "checklist")
-                ? today.toLocaleString('default', { month: 'short' })
-                : new Date().toLocaleString('default', { month: 'short' });
-
+            const completedMonth = parseDateFromDDMMYYYY(completionDate);
+            if (completedMonth) {
+              const monthName = completedMonth.toLocaleString('default', { month: 'short' });
               if (monthlyData[monthName]) {
-                monthlyData[monthName].pending++;
+                monthlyData[monthName].completed++;
               }
+            } else if (isArchive) {
+              const monthName = today.toLocaleString('default', { month: 'short' });
+              if (monthlyData[monthName]) {
+                monthlyData[monthName].completed++;
+              }
+            }
+          } else if (notDoneStatus === 'Not Done') {
+            // New branch for Not Done tasks
+            // They contribute to total but not to pending or completed
+            // This explains the 176 - (1 + 174) = 1 gap
+          } else {
+            staffData.pendingTasks++;
+            pendingTasks++;
+            statusData.Pending++;
+
+            if (status === 'overdue') {
+              overdueTasks++;
+              statusData.Overdue++;
+            }
+
+            const monthName = (dashboardType === "checklist")
+              ? today.toLocaleString('default', { month: 'short' })
+              : new Date().toLocaleString('default', { month: 'short' });
+
+            if (monthlyData[monthName]) {
+              monthlyData[monthName].pending++;
             }
           }
         }
