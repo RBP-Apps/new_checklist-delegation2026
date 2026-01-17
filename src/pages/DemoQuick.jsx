@@ -45,7 +45,7 @@ export default function QuickTask() {
     const fetchDepartments = useCallback(async () => {
         try {
             setDepartmentsLoading(true);
-            const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbzhGx7Y_6l8a63nkcXEiG4esKA42RRx4JyCKk-OJ6qvAnsVfIMOJMoc-9SewsmUsTHBTg/exec";
+            const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec";
             const masterSheetUrl = `${userAppScriptUrl}?sheet=${CONFIG.MASTER_SHEET}&action=fetch&t=${Date.now()}`;
             const response = await fetch(masterSheetUrl);
             const data = await response.json();
@@ -94,7 +94,7 @@ export default function QuickTask() {
             }
 
             // Fetch user role from Whatsapp sheet via proxy
-            const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbzhGx7Y_6l8a63nkcXEiG4esKA42RRx4JyCKk-OJ6qvAnsVfIMOJMoc-9SewsmUsTHBTg/exec";
+            const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec";
             const whatsappSheetUrl = `${userAppScriptUrl}?sheet=${CONFIG.WHATSAPP_SHEET}&action=fetch&t=${Date.now()}`;
             const response = await fetch(whatsappSheetUrl);
             const data = await response.json();
@@ -149,7 +149,7 @@ export default function QuickTask() {
             const sheetName = selectedDepartment || CONFIG.CHECKLIST_SHEET;
 
             // Fetch from Checklist sheet via proxy
-            const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbzhGx7Y_6l8a63nkcXEiG4esKA42RRx4JyCKk-OJ6qvAnsVfIMOJMoc-9SewsmUsTHBTg/exec";
+            const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec";
             const checklistUrl = `${userAppScriptUrl}?sheet=${sheetName}&action=fetch&t=${Date.now()}`;
             const response = await fetch(checklistUrl);
             const data = await response.json();
@@ -217,7 +217,7 @@ export default function QuickTask() {
             setDelegationLoading(true);
 
             // Fetch from Delegation sheet via proxy
-            const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbzhGx7Y_6l8a63nkcXEiG4esKA42RRx4JyCKk-OJ6qvAnsVfIMOJMoc-9SewsmUsTHBTg/exec";
+            const userAppScriptUrl = "https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec";
             const delegationUrl = `${userAppScriptUrl}?sheet=${CONFIG.DELEGATION_SHEET}&action=fetch&t=${Date.now()}`;
             const response = await fetch(delegationUrl);
             const data = await response.json();

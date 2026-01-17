@@ -40,7 +40,7 @@ const LoginPage = () => {
     useEffect(() => {
         const fetchMasterData = async () => {
             const SCRIPT_URL =
-                "https://script.google.com/macros/s/AKfycbzhGx7Y_6l8a63nkcXEiG4esKA42RRx4JyCKk-OJ6qvAnsVfIMOJMoc-9SewsmUsTHBTg/exec";
+                "https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec";
 
             try {
                 setIsDataLoading(true);
