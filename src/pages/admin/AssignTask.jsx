@@ -18,7 +18,7 @@ const CalendarComponent = ({ date, onChange, onClose }) => {
     const selectedDate = new Date(
       currentMonth.getFullYear(),
       currentMonth.getMonth(),
-      day
+      day,
     );
     onChange(selectedDate);
     onClose();
@@ -28,11 +28,11 @@ const CalendarComponent = ({ date, onChange, onClose }) => {
     const days = [];
     const daysInMonth = getDaysInMonth(
       currentMonth.getFullYear(),
-      currentMonth.getMonth()
+      currentMonth.getMonth(),
     );
     const firstDayOfMonth = getFirstDayOfMonth(
       currentMonth.getFullYear(),
-      currentMonth.getMonth()
+      currentMonth.getMonth(),
     );
 
     // Add empty cells for days before the first day of the month
@@ -53,13 +53,14 @@ const CalendarComponent = ({ date, onChange, onClose }) => {
           key={day}
           type="button"
           onClick={() => handleDateClick(day)}
-          className={`h-8 w-8 rounded-full flex items-center justify-center text-sm ${isSelected
-            ? "bg-purple-600 text-white"
-            : "hover:bg-purple-100 text-gray-700"
-            }`}
+          className={`h-8 w-8 rounded-full flex items-center justify-center text-sm ${
+            isSelected
+              ? "bg-purple-600 text-white"
+              : "hover:bg-purple-100 text-gray-700"
+          }`}
         >
           {day}
-        </button>
+        </button>,
       );
     }
 
@@ -68,13 +69,13 @@ const CalendarComponent = ({ date, onChange, onClose }) => {
 
   const prevMonth = () => {
     setCurrentMonth(
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1),
     );
   };
 
   const nextMonth = () => {
     setCurrentMonth(
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1),
     );
   };
 
@@ -197,7 +198,7 @@ export default function AssignTask() {
       const masterSheetName = "master";
 
       const url = `https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec?sheet=${encodeURIComponent(
-        masterSheetName
+        masterSheetName,
       )}&action=fetch&t=${Date.now()}`;
 
       const response = await fetch(url);
@@ -319,7 +320,7 @@ export default function AssignTask() {
         sheetName,
         sheetName.toUpperCase(),
         sheetName.toLowerCase(),
-        sheetName.charAt(0).toUpperCase() + sheetName.slice(1).toLowerCase()
+        sheetName.charAt(0).toUpperCase() + sheetName.slice(1).toLowerCase(),
       ];
 
       let data = null;
@@ -328,7 +329,7 @@ export default function AssignTask() {
       for (const trySheetName of sheetNamesToTry) {
         try {
           const url = `https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec?sheet=${encodeURIComponent(
-            trySheetName
+            trySheetName,
           )}&action=fetch&t=${Date.now()}`;
 
           const response = await fetch(url);
@@ -346,12 +347,19 @@ export default function AssignTask() {
         }
       }
 
-      if (!data || !data.table || !data.table.rows || data.table.rows.length <= 1) {
+      if (
+        !data ||
+        !data.table ||
+        !data.table.rows ||
+        data.table.rows.length <= 1
+      ) {
         console.log(`No existing tasks found in sheet, starting from ID 1`);
         return 0; // Start from 1 if no tasks exist (only header row)
       }
 
-      console.log(`Successfully fetched data from sheet: ${successfulSheetName}`);
+      console.log(
+        `Successfully fetched data from sheet: ${successfulSheetName}`,
+      );
 
       // Get the last task ID from column B (index 1)
       let lastTaskId = 0;
@@ -391,7 +399,7 @@ export default function AssignTask() {
       const sheetName = "Working Day Calendar";
 
       const url = `https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec?sheet=${encodeURIComponent(
-        sheetName
+        sheetName,
       )}&action=fetch&t=${Date.now()}`;
 
       const response = await fetch(url);
@@ -414,7 +422,10 @@ export default function AssignTask() {
 
           // Handle Google Sheets Date(year,month,day) format
           if (typeof dateValue === "string" && dateValue.startsWith("Date(")) {
-            const match = /Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/.exec(dateValue);
+            const match =
+              /Date\((\d+),(\d+),(\d+)(?:,(\d+),(\d+),(\d+))?\)/.exec(
+                dateValue,
+              );
             if (match) {
               const year = parseInt(match[1], 10);
               const month = parseInt(match[2], 10); // 0-indexed in Google's format
@@ -457,7 +468,8 @@ export default function AssignTask() {
 
     // Otherwise, find the next working day
     let checkDate = new Date(targetDate);
-    for (let i = 1; i <= 30; i++) { // Check up to 30 days ahead
+    for (let i = 1; i <= 30; i++) {
+      // Check up to 30 days ahead
       checkDate = addDays(targetDate, i);
       const checkDateStr = formatDateToDDMMYYYY(checkDate);
       if (workingDays.includes(checkDateStr)) {
@@ -471,7 +483,13 @@ export default function AssignTask() {
 
   // UPDATED: generateTasks function with proper frequency logic
   const generateTasks = async () => {
-    if (!date || !time || !formData.doer || !formData.description || !formData.frequency) {
+    if (
+      !date ||
+      !time ||
+      !formData.doer ||
+      !formData.description ||
+      !formData.frequency
+    ) {
       alert("Please fill in all required fields including date and time.");
       return;
     }
@@ -488,31 +506,36 @@ export default function AssignTask() {
 
           const taskDateTimeStr = formatDateTimeForStorage(date, time);
 
-          const tasks = [{
-            description: formData.description,
-            department: formData.department,
-            givenBy: formData.givenBy,
-            doer: formData.doer,
-            dueDate: taskDateTimeStr,
-            status: "pending",
-            frequency: formData.frequency,
-            enableReminders: formData.enableReminders,
-            requireAttachment: formData.requireAttachment,
-          }];
+          const tasks = [
+            {
+              description: formData.description,
+              department: formData.department,
+              givenBy: formData.givenBy,
+              doer: formData.doer,
+              dueDate: taskDateTimeStr,
+              status: "pending",
+              frequency: formData.frequency,
+              enableReminders: formData.enableReminders,
+              requireAttachment: formData.requireAttachment,
+            },
+          ];
 
           setGeneratedTasks(tasks);
         } else {
           console.log("Working days found:", workingDays);
 
           const sortedWorkingDays = [...workingDays].sort((a, b) => {
-            const [dayA, monthA, yearA] = a.split('/').map(Number);
-            const [dayB, monthB, yearB] = b.split('/').map(Number);
-            return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
+            const [dayA, monthA, yearA] = a.split("/").map(Number);
+            const [dayB, monthB, yearB] = b.split("/").map(Number);
+            return (
+              new Date(yearA, monthA - 1, dayA) -
+              new Date(yearB, monthB - 1, dayB)
+            );
           });
 
           const selectedDate = new Date(date);
-          const futureDates = sortedWorkingDays.filter(dateStr => {
-            const [dateDay, month, year] = dateStr.split('/').map(Number);
+          const futureDates = sortedWorkingDays.filter((dateStr) => {
+            const [dateDay, month, year] = dateStr.split("/").map(Number);
             const dateObj = new Date(year, month - 1, dateDay);
             return dateObj >= selectedDate;
           });
@@ -523,23 +546,51 @@ export default function AssignTask() {
           if (futureDates.length === 0) {
             // No future working days found, use the selected date
             taskDateStr = startDateStr;
-            alert(`No working days found on or after your selected date. Using selected date: ${startDateStr}`);
+            alert(
+              `No working days found on or after your selected date. Using selected date: ${startDateStr}`,
+            );
           } else {
-            let startIndex = futureDates.findIndex(d => d === startDateStr);
+            let startIndex = futureDates.findIndex((d) => d === startDateStr);
 
             if (startIndex === -1) {
               startIndex = 0;
-              alert(`The selected date (${startDateStr}) is not in the Working Day Calendar. The next available working day will be used instead: ${futureDates[0]}`);
+              alert(
+                `The selected date (${startDateStr}) is not in the Working Day Calendar. The next available working day will be used instead: ${futureDates[0]}`,
+              );
             }
 
             taskDateStr = futureDates[startIndex];
           }
 
-          const [taskDay, taskMonth, taskYear] = taskDateStr.split('/').map(Number);
+          const [taskDay, taskMonth, taskYear] = taskDateStr
+            .split("/")
+            .map(Number);
           const taskDate = new Date(taskYear, taskMonth - 1, taskDay);
           const taskDateTimeStr = formatDateTimeForStorage(taskDate, time);
 
-          const tasks = [{
+          const tasks = [
+            {
+              description: formData.description,
+              department: formData.department,
+              givenBy: formData.givenBy,
+              doer: formData.doer,
+              dueDate: taskDateTimeStr,
+              status: "pending",
+              frequency: formData.frequency,
+              enableReminders: formData.enableReminders,
+              requireAttachment: formData.requireAttachment,
+            },
+          ];
+
+          setGeneratedTasks(tasks);
+        }
+      } catch (error) {
+        console.error("Error generating one-time task:", error);
+        // Fallback: Use the selected date directly
+        const taskDateTimeStr = formatDateTimeForStorage(date, time);
+
+        const tasks = [
+          {
             description: formData.description,
             department: formData.department,
             givenBy: formData.givenBy,
@@ -549,45 +600,31 @@ export default function AssignTask() {
             frequency: formData.frequency,
             enableReminders: formData.enableReminders,
             requireAttachment: formData.requireAttachment,
-          }];
-
-          setGeneratedTasks(tasks);
-        }
-      } catch (error) {
-        console.error("Error generating one-time task:", error);
-        // Fallback: Use the selected date directly
-        const taskDateTimeStr = formatDateTimeForStorage(date, time);
-
-        const tasks = [{
-          description: formData.description,
-          department: formData.department,
-          givenBy: formData.givenBy,
-          doer: formData.doer,
-          dueDate: taskDateTimeStr,
-          status: "pending",
-          frequency: formData.frequency,
-          enableReminders: formData.enableReminders,
-          requireAttachment: formData.requireAttachment,
-        }];
+          },
+        ];
 
         setGeneratedTasks(tasks);
-        alert("Using selected date directly due to an error in fetching working days.");
+        alert(
+          "Using selected date directly due to an error in fetching working days.",
+        );
       }
     } else {
       // For recurring frequencies, generate only ONE task with the End Date
       const taskDateTimeStr = formatDateTimeForStorage(date, time);
 
-      const tasks = [{
-        description: formData.description,
-        department: formData.department,
-        givenBy: formData.givenBy,
-        doer: formData.doer,
-        dueDate: taskDateTimeStr, // This becomes the End Date for recurrence
-        status: "pending",
-        frequency: formData.frequency,
-        enableReminders: formData.enableReminders,
-        requireAttachment: formData.requireAttachment,
-      }];
+      const tasks = [
+        {
+          description: formData.description,
+          department: formData.department,
+          givenBy: formData.givenBy,
+          doer: formData.doer,
+          dueDate: taskDateTimeStr, // This becomes the End Date for recurrence
+          status: "pending",
+          frequency: formData.frequency,
+          enableReminders: formData.enableReminders,
+          requireAttachment: formData.requireAttachment,
+        },
+      ];
 
       setGeneratedTasks(tasks);
     }
@@ -598,7 +635,9 @@ export default function AssignTask() {
   // Helper function to find the closest working day to a target date
   const findClosestWorkingDayIndex = (workingDays, targetDateStr) => {
     // Parse the target date (DD/MM/YYYY format)
-    const [targetDay, targetMonth, targetYear] = targetDateStr.split('/').map(Number);
+    const [targetDay, targetMonth, targetYear] = targetDateStr
+      .split("/")
+      .map(Number);
     const targetDate = new Date(targetYear, targetMonth - 1, targetDay);
 
     // Find the closest working day (preferably after the target date)
@@ -606,11 +645,15 @@ export default function AssignTask() {
     let minDifference = Infinity;
 
     for (let i = 0; i < workingDays.length; i++) {
-      const [workingDay, workingMonth, workingYear] = workingDays[i].split('/').map(Number);
+      const [workingDay, workingMonth, workingYear] = workingDays[i]
+        .split("/")
+        .map(Number);
       const currentDate = new Date(workingYear, workingMonth - 1, workingDay);
 
       // Calculate difference in days
-      const difference = Math.abs((currentDate - targetDate) / (1000 * 60 * 60 * 24));
+      const difference = Math.abs(
+        (currentDate - targetDate) / (1000 * 60 * 60 * 24),
+      );
 
       if (currentDate >= targetDate && difference < minDifference) {
         minDifference = difference;
@@ -621,8 +664,14 @@ export default function AssignTask() {
     // If no working day found after the target date, find the closest one before
     if (closestIndex === -1) {
       for (let i = workingDays.length - 1; i >= 0; i--) {
-        const [workingDay2, workingMonth2, workingYear2] = workingDays[i].split('/').map(Number);
-        const currentDate2 = new Date(workingYear2, workingMonth2 - 1, workingDay2);
+        const [workingDay2, workingMonth2, workingYear2] = workingDays[i]
+          .split("/")
+          .map(Number);
+        const currentDate2 = new Date(
+          workingYear2,
+          workingMonth2 - 1,
+          workingDay2,
+        );
 
         if (currentDate2 < targetDate) {
           closestIndex = i;
@@ -640,15 +689,15 @@ export default function AssignTask() {
     const month = date.getMonth();
 
     // Get all working days in the target month (DD/MM/YYYY format)
-    const daysInMonth = workingDays.filter(dateStr => {
-      const [, m, y] = dateStr.split('/').map(Number);
+    const daysInMonth = workingDays.filter((dateStr) => {
+      const [, m, y] = dateStr.split("/").map(Number);
       return y === year && m === month + 1;
     });
 
     // Sort them chronologically
     daysInMonth.sort((a, b) => {
-      const [dayA] = a.split('/').map(Number);
-      const [dayB] = b.split('/').map(Number);
+      const [dayA] = a.split("/").map(Number);
+      const [dayB] = b.split("/").map(Number);
       return dayA - dayB;
     });
 
@@ -658,7 +707,7 @@ export default function AssignTask() {
     let lastWeekDay = -1;
 
     for (const dateStr of daysInMonth) {
-      const [workingDay2, m, y] = dateStr.split('/').map(Number);
+      const [workingDay2, m, y] = dateStr.split("/").map(Number);
       const dateObj = new Date(y, m - 1, workingDay2);
       const weekDay = dateObj.getDay(); // 0 for Sunday, 1 for Monday, etc.
 
@@ -681,10 +730,17 @@ export default function AssignTask() {
     // Return the last day of the requested week
     if (weekNumber === -1) {
       // Last week of the month
-      return weekGroups[weekGroups.length - 1]?.[weekGroups[weekGroups.length - 1].length - 1] || daysInMonth[daysInMonth.length - 1];
+      return (
+        weekGroups[weekGroups.length - 1]?.[
+          weekGroups[weekGroups.length - 1].length - 1
+        ] || daysInMonth[daysInMonth.length - 1]
+      );
     } else if (weekNumber > 0 && weekNumber <= weekGroups.length) {
       // Specific week
-      return weekGroups[weekNumber - 1]?.[weekGroups[weekNumber - 1].length - 1] || daysInMonth[daysInMonth.length - 1];
+      return (
+        weekGroups[weekNumber - 1]?.[weekGroups[weekNumber - 1].length - 1] ||
+        daysInMonth[daysInMonth.length - 1]
+      );
     } else {
       // Default to the last day of the month if the requested week doesn't exist
       return daysInMonth[daysInMonth.length - 1];
@@ -698,7 +754,9 @@ export default function AssignTask() {
 
     try {
       if (generatedTasks.length === 0) {
-        alert("Please generate tasks first by clicking Preview Generated Tasks");
+        alert(
+          "Please generate tasks first by clicking Preview Generated Tasks",
+        );
         setIsSubmitting(false);
         return;
       }
@@ -716,9 +774,9 @@ export default function AssignTask() {
           const sheetId = "1zLGfIyllg8uCpcWCgbixsM1gbZrRDlXuVd8rKzLLi0Y";
           const sheetName = "Checklist";
 
-          const url = `https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec?sheet=${encodeURIComponent(
-            sheetName
-          )}&action=fetch&t=${Date.now()}`;
+          const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(
+            sheetName,
+          )}`;
 
           const response = await fetch(url);
           if (!response.ok) {
@@ -726,7 +784,11 @@ export default function AssignTask() {
             return true;
           }
 
-          const data = await response.json();
+          const text = await response.text();
+          const jsonStart = text.indexOf("{");
+          const jsonEnd = text.lastIndexOf("}");
+          const jsonString = text.substring(jsonStart, jsonEnd + 1);
+          const data = JSON.parse(jsonString);
 
           if (!data.table || !data.table.rows || data.table.rows.length <= 1) {
             console.log("Checklist sheet is empty - treating as new task");
@@ -737,16 +799,29 @@ export default function AssignTask() {
           for (let i = 1; i < data.table.rows.length; i++) {
             const row = data.table.rows[i];
 
-            const rowName = (row.c && row.c[4] && row.c[4].v) ? row.c[4].v.toString().trim() : "";
-            const rowDesc = (row.c && row.c[5] && row.c[5].v) ? row.c[5].v.toString().trim() : "";
+            const rowName =
+              row.c && row.c[4] && row.c[4].v
+                ? row.c[4].v.toString().trim()
+                : "";
+            const rowDesc =
+              row.c && row.c[5] && row.c[5].v
+                ? row.c[5].v.toString().trim()
+                : "";
 
-            if (rowName === doerName.trim() && rowDesc === taskDescription.trim()) {
-              console.log(`Task "${taskDescription}" for user "${doerName}" found in Checklist - NOT new`);
+            if (
+              rowName === doerName.trim() &&
+              rowDesc === taskDescription.trim()
+            ) {
+              console.log(
+                `Task "${taskDescription}" for user "${doerName}" found in Checklist - NOT new`,
+              );
               return false;
             }
           }
 
-          console.log(`Task "${taskDescription}" for user "${doerName}" NOT found in Checklist - IS new`);
+          console.log(
+            `Task "${taskDescription}" for user "${doerName}" NOT found in Checklist - IS new`,
+          );
           return true;
         } catch (error) {
           console.error("Error checking new task:", error);
@@ -754,74 +829,161 @@ export default function AssignTask() {
         }
       };
 
-      // Determine the sheet(s) based on frequency and user-task uniqueness
+      // Determine the sheet(s) based on frequency
       let submitToSheets = [];
 
       if (formData.frequency === "one-time") {
+        // One-time task: ONLY to DELEGATION
         submitToSheets = ["DELEGATION"];
         console.log("One-time task - submitting to DELEGATION only");
       } else {
-        // Use the description from the first generated task (assuming all have same description)
-        const currentDescription = generatedTasks[0]?.description || formData.description;
-        const isNew = await isTaskNewForUser(formData.doer, currentDescription);
-
-        if (isNew) {
-          submitToSheets = ["Unique", "Checklist"];
-          console.log("New task for user - submitting to both Unique and Checklist");
-        } else {
-          submitToSheets = ["Unique"];
-          console.log("Existing task for user - submitting to Unique only");
-        }
+        // Recurring task: ALWAYS to BOTH Unique and Checklist
+        // (We're ignoring the isTaskNewForUser check as per requirement)
+        submitToSheets = ["Unique", "Checklist"];
+        console.log("Recurring task - submitting to BOTH Unique and Checklist");
       }
 
       console.log(`Selected department: ${formData.department}`);
       console.log(`Doer: ${formData.doer}`);
-      console.log(`Target sheets: ${submitToSheets.join(', ')}`);
+      console.log(`Target sheets: ${submitToSheets.join(", ")}`);
+
+      // Function to submit data to Google Sheets
+      const submitDataToSheet = async (sheetName, data) => {
+        try {
+          const formPayload = new FormData();
+          formPayload.append("sheetName", sheetName);
+          formPayload.append("action", "insert");
+          formPayload.append("batchInsert", "true");
+          formPayload.append("rowData", JSON.stringify(data));
+
+          console.log(`Submitting to ${sheetName}:`, data);
+
+          await fetch(
+            "https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec",
+            {
+              method: "POST",
+              body: formPayload,
+              mode: "no-cors",
+            },
+          );
+
+          console.log(`Successfully submitted to ${sheetName}`);
+          return true;
+        } catch (error) {
+          console.error(`Error submitting to ${sheetName}:`, error);
+          return false;
+        }
+      };
 
       // Submit to each target sheet
+      const submissionResults = [];
+
       for (const sheetName of submitToSheets) {
-        // Get the last task ID from the current sheet (only for sheets that need it)
-        const needsTaskId = sheetName !== "Checklist";
-        const lastTaskId = needsTaskId ? await getLastTaskId(sheetName) : 0;
-        let nextTaskId = lastTaskId + 1;
+        console.log(`Processing sheet: ${sheetName}`);
 
-        // Prepare all tasks data for batch insertion
-        const tasksData = generatedTasks.map((task, index) => {
-          return {
-            timestamp: getCurrentTimestamp(),
-            taskId: needsTaskId ? (nextTaskId + index).toString() : "",
-            department: task.department || formData.department,
-            givenBy: task.givenBy || formData.givenBy,
-            name: task.doer || formData.doer,
-            description: task.description,
-            startDate: task.dueDate,
-            freq: task.frequency,
-            enableReminders: task.enableReminders ? "Yes" : "No",
-            requireAttachment: task.requireAttachment ? "Yes" : "No"
-          };
-        });
+        if (sheetName === "DELEGATION") {
+          // For DELEGATION sheet - get taskId
+          const lastTaskId = await getLastTaskId(sheetName);
+          let nextTaskId = lastTaskId + 1;
 
-        console.log(`Submitting ${tasksData.length} tasks to ${sheetName} sheet`);
+          // Prepare data for DELEGATION with taskId
+          const delegationData = generatedTasks.map((task, index) => {
+            return {
+              timestamp: getCurrentTimestamp(),
+              department: task.department || formData.department,
+              givenBy: task.givenBy || formData.givenBy,
+              name: task.doer || formData.doer,
+              description: task.description,
+              startDate: task.dueDate,
+              freq: task.frequency,
+              enableReminders: task.enableReminders ? "Yes" : "No",
+              requireAttachment: task.requireAttachment ? "Yes" : "No",
+              taskId: (nextTaskId + index).toString(),
+            };
+          });
 
-        // Submit all tasks in one batch to Google Sheets
-        const formPayload = new FormData();
-        formPayload.append("sheetName", sheetName);
-        formPayload.append("action", "insert");
-        formPayload.append("batchInsert", "true");
-        formPayload.append("rowData", JSON.stringify(tasksData));
+          const result = await submitDataToSheet(sheetName, delegationData);
+          if (result) submissionResults.push(sheetName);
+        } else if (sheetName === "Unique") {
+          // For Unique sheet - get taskId
+          const lastTaskId = await getLastTaskId(sheetName);
+          let nextTaskId = lastTaskId + 1;
 
-        await fetch(
-          "https://script.google.com/macros/s/AKfycbx5U4JPKvN86ZRm02dLZ7mD1C4F4jdGNICL4g-RV4doExSw8QC_IVm_huURo09q2HDvBQ/exec",
-          {
-            method: "POST",
-            body: formPayload,
-            mode: "no-cors",
+          // Prepare data for Unique with taskId
+          const uniqueData = generatedTasks.map((task, index) => {
+            return {
+              timestamp: getCurrentTimestamp(),
+              department: task.department || formData.department,
+              givenBy: task.givenBy || formData.givenBy,
+              name: task.doer || formData.doer,
+              description: task.description,
+              startDate: task.dueDate,
+              freq: task.frequency,
+              enableReminders: task.enableReminders ? "Yes" : "No",
+              requireAttachment: task.requireAttachment ? "Yes" : "No",
+              taskId: (nextTaskId + index).toString(),
+            };
+          });
+
+          const result = await submitDataToSheet(sheetName, uniqueData);
+          if (result) submissionResults.push(sheetName);
+        } else if (sheetName === "Checklist") {
+          // For Checklist sheet - NO taskId
+          const checklistData = generatedTasks.map((task, index) => {
+            return {
+              timestamp: getCurrentTimestamp(),
+              department: task.department || formData.department,
+              givenBy: task.givenBy || formData.givenBy,
+              name: task.doer || formData.doer,
+              description: task.description,
+              startDate: task.dueDate,
+              freq: task.frequency,
+              enableReminders: task.enableReminders ? "Yes" : "No",
+              requireAttachment: task.requireAttachment ? "Yes" : "No",
+              // NO taskId for Checklist
+            };
+          });
+
+          // Try different variations of Checklist sheet name
+          const checklistVariations = [
+            "Checklist",
+            "CHECKLIST",
+            "checklist",
+            "CheckList",
+          ];
+          let checklistSubmitted = false;
+
+          for (const variation of checklistVariations) {
+            console.log(`Trying Checklist as: ${variation}`);
+            const result = await submitDataToSheet(variation, checklistData);
+
+            if (result) {
+              checklistSubmitted = true;
+              submissionResults.push("Checklist");
+              console.log(
+                `Successfully submitted to Checklist as ${variation}`,
+              );
+              break;
+            }
           }
-        );
+
+          if (!checklistSubmitted) {
+            console.warn(
+              "Could not submit to Checklist sheet with any name variation",
+            );
+          }
+        }
       }
 
-      const sheetNames = submitToSheets.join(' and ');
-      alert(`Successfully submitted ${generatedTasks.length} task${generatedTasks.length !== 1 ? 's' : ''} to ${sheetNames} sheet${submitToSheets.length > 1 ? 's' : ''}!`);
+      // Show success message
+      if (submissionResults.length > 0) {
+        const sheetNames = submissionResults.join(" and ");
+        alert(
+          `Successfully submitted ${generatedTasks.length} task${generatedTasks.length !== 1 ? "s" : ""} to ${sheetNames} sheet${submissionResults.length > 1 ? "s" : ""}!`,
+        );
+      } else {
+        alert("Failed to submit tasks. Please try again.");
+      }
 
       // Reset form
       setFormData({
@@ -831,7 +993,7 @@ export default function AssignTask() {
         description: "",
         frequency: "one-time",
         enableReminders: true,
-        requireAttachment: false
+        requireAttachment: false,
       });
       setSelectedDate(null);
       setTime("09:00");
@@ -983,7 +1145,7 @@ export default function AssignTask() {
                 {/* Date Picker */}
                 <div className="space-y-2">
                   <label className="block text-sm font-medium text-purple-700">
-                    Task End Date
+                    compilation date
                   </label>
                   <div className="relative">
                     <button
@@ -1055,7 +1217,8 @@ export default function AssignTask() {
               {date && time && (
                 <div className="p-3 bg-purple-50 border border-purple-200 rounded-md">
                   <p className="text-sm text-purple-700">
-                    <strong>Selected Date & Time:</strong> {getFormattedDateTime()}
+                    <strong>Selected Date & Time:</strong>{" "}
+                    {getFormattedDateTime()}
                   </p>
                   <p className="text-xs text-purple-600 mt-1">
                     Will be stored as: {formatDateTimeForStorage(date, time)}
@@ -1147,15 +1310,16 @@ export default function AssignTask() {
                         className="w-full flex justify-between items-center p-4 text-purple-700 hover:bg-purple-50 focus:outline-none"
                       >
                         <span className="font-medium">
-                          {generatedTasks.length} Task{generatedTasks.length !== 1 ? 's' : ''} Generated
+                          {generatedTasks.length} Task
+                          {generatedTasks.length !== 1 ? "s" : ""} Generated
                           {formData.frequency === "one-time"
                             ? " (Will be stored in DELEGATION sheet)"
-                            : ` (Recurring task - Will be stored in Task List sheet)`
-                          }
+                            : ` (Recurring task - Will be stored in Task List sheet)`}
                         </span>
                         <svg
-                          className={`w-5 h-5 transition-transform ${accordionOpen ? "rotate-180" : ""
-                            }`}
+                          className={`w-5 h-5 transition-transform ${
+                            accordionOpen ? "rotate-180" : ""
+                          }`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -1181,7 +1345,8 @@ export default function AssignTask() {
                                   {task.description}
                                 </div>
                                 <div className="text-xs text-purple-600">
-                                  Due: {formatDateForDisplay(task.dueDate)} | Department: {task.department}
+                                  Due: {formatDateForDisplay(task.dueDate)} |
+                                  Department: {task.department}
                                 </div>
                                 <div className="flex space-x-2 mt-1">
                                   {task.enableReminders && (
