@@ -314,12 +314,19 @@ export default function AssignTask() {
 
   // New useEffect to auto-set logged-in user
   useEffect(() => {
-    // Get logged-in username from localStorage
+    // Get logged-in username from localStorage using multiple common keys
     const userName =
       localStorage.getItem("username") ||
       localStorage.getItem("user") ||
       localStorage.getItem("email") ||
+      localStorage.getItem("name") ||
+      localStorage.getItem("fullName") ||
+      localStorage.getItem("displayName") ||
       "";
+
+    console.log("Retrieved userName from localStorage:", userName);
+    // Log all localStorage keys to help debug
+    console.log("All localStorage keys:", Object.keys(localStorage));
 
     if (userName) {
       setLoggedInUser(userName);
@@ -329,6 +336,8 @@ export default function AssignTask() {
         ...prev,
         givenBy: userName,
       }));
+    } else {
+      console.warn("No username found in localStorage. Given By will be empty.");
     }
   }, []);
 
