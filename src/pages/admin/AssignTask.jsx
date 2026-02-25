@@ -155,6 +155,8 @@ export default function AssignTask() {
   const [departmentOptions, setDepartmentOptions] = useState([]);
   const [givenByOptions, setGivenByOptions] = useState([]);
   const [doerOptions, setDoerOptions] = useState([]);
+  // New state for logged-in user
+  const [loggedInUser, setLoggedInUser] = useState("");
 
   const frequencies = [
     { value: "one-time", label: "One Time (No Recurrence)" },
@@ -308,6 +310,26 @@ export default function AssignTask() {
 
   useEffect(() => {
     fetchMasterSheetOptions();
+  }, []);
+
+  // New useEffect to auto-set logged-in user
+  useEffect(() => {
+    // Get logged-in username from localStorage
+    const userName =
+      localStorage.getItem("username") ||
+      localStorage.getItem("user") ||
+      localStorage.getItem("email") ||
+      "";
+
+    if (userName) {
+      setLoggedInUser(userName);
+
+      // Auto set Given By field
+      setFormData((prev) => ({
+        ...prev,
+        givenBy: userName,
+      }));
+    }
   }, []);
 
   // Add a function to get the last task ID from the specified sheet
@@ -1070,7 +1092,7 @@ export default function AssignTask() {
                 )}
               </div>
 
-              {/* Given By Dropdown */}
+              {/* Given By - replaced with read-only input */}
               <div className="space-y-2">
                 <label
                   htmlFor="givenBy"
@@ -1078,21 +1100,15 @@ export default function AssignTask() {
                 >
                   Given By
                 </label>
-                <select
+                <input
+                  type="text"
                   id="givenBy"
                   name="givenBy"
                   value={formData.givenBy}
-                  onChange={handleChange}
+                  readOnly
                   required
-                  className="w-full rounded-md border border-purple-200 p-2 focus:border-purple-500 focus:outline-none focus:ring-1 focus:ring-purple-500"
-                >
-                  <option value="">Select Given By</option>
-                  {givenByOptions.map((person, index) => (
-                    <option key={index} value={person}>
-                      {person}
-                    </option>
-                  ))}
-                </select>
+                  className="w-full rounded-md border border-purple-200 p-2 bg-gray-100 text-gray-700 cursor-not-allowed focus:outline-none"
+                />
               </div>
 
               {/* Doer's Name Dropdown */}
